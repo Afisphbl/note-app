@@ -3,9 +3,10 @@ export default function Button({
   type = "button",
   onClick,
   className,
+  title = "",
 }) {
   return (
-    <button className={className} onClick={onClick} type={type}>
+    <button className={className} onClick={onClick} type={type} title={title}>
       {children}
     </button>
   );
