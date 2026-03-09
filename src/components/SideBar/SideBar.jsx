@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { Link } from "react-router";
 import {
   PlusIcon,
   FolderIcon,
@@ -7,10 +8,17 @@ import {
   Trash2Icon,
   Settings,
 } from "lucide-react";
+import { useDataContext } from "../../context/NoteProvider";
 import Button from "../Button/Button";
 import "./Sidebar.css";
 
 function SideBar() {
+  const { noteId, updateNoteId } = useDataContext();
+  let activeNoteId;
+  useEffect(() => {
+    activeNoteId = noteId;
+  }, [noteId]);
+
   return (
     <aside className="sidebar">
       <div className="sidebar__top">
@@ -22,11 +30,14 @@ function SideBar() {
               <p className="sidebar__workspace-plan">Free Plan</p>
             </div>
           </div>
-
-          <Button className="sidebar__new-note-btn">
+          <Link
+            to={`note/${activeNoteId}`}
+            className="sidebar__new-note-btn"
+            onClick={updateNoteId}
+          >
             <PlusIcon size={16} />
             New Note
-          </Button>
+          </Link>
         </div>
 
         <ul className="sidebar__nav">

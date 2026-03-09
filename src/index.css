@@ -72,6 +72,16 @@ input,
 textarea,
 select {
   font-family: inherit;
+  outline: none;
+  border: none;
+}
+
+input:focus,
+input:focus-visible,
+textarea:focus,
+textarea:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .app-container {

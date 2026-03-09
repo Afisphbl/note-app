@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { ArrowLeft, StarIcon, Trash2Icon, SettingsIcon } from "lucide-react";
+import {
+  ArrowLeft,
+  StarIcon,
+  Trash2Icon,
+  SettingsIcon,
+  CheckCircle2,
+} from "lucide-react";
+import { useDataContext } from "../../context/NoteProvider";
 import Button from "../Button/Button";
 import Input from "../Input/Input";
 import "./NoteEditor.css";
@@ -13,6 +20,7 @@ const sampleTags = [
 function NoteEditor() {
   const [tags, setTags] = useState(sampleTags);
   const [showTagPicker, setShowTagPicker] = useState(false);
+  const { resetNoteId } = useDataContext();
 
   function toggleTagPicker() {
     setShowTagPicker((prev) => !prev);
@@ -23,6 +31,7 @@ function NoteEditor() {
         <Button
           className="editor__toolbar-left editor__toolbar-btn"
           title="Go back to notes list"
+          onClick={resetNoteId}
         >
           <ArrowLeft size={16} />
         </Button>
@@ -45,6 +54,15 @@ function NoteEditor() {
         isTagPickerVisible={showTagPicker}
         toggleTagPicker={toggleTagPicker}
       />
+      <EditorBody />
+
+      <div className="editor__statusbar">
+        <span>0 words</span>
+        <div className="editor__statusbar-saved">
+          <CheckCircle2 size={16} />
+          saved
+        </div>
+      </div>
     </section>
   );
 }
@@ -75,6 +93,18 @@ function MetaBar({ tags, isTagPickerVisible, toggleTagPicker }) {
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function EditorBody() {
+  return (
+    <div className="editor__body">
+      <textarea
+        className="editor__content"
+        placeholder="Start writing your note here..."
+        multiline
+      />
     </div>
   );
 }
