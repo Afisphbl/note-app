@@ -21,7 +21,7 @@
   --radius-full: 9999px;
 }
 
-:root[dark-theme="dark"] {
+:root[data-theme="dark"] {
   --primary: #136dec;
   --primary-hover: #1059c2;
   --primary-light: rgba(19, 109, 236, 0.2);

@@ -1,0 +1,115 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 10;
+  flex-shrink: 0;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+
+.header__brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text-main);
+}
+
+.header__brand-icon {
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header__brand-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header__search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--hover-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  padding: 0.375rem 0.875rem;
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
+}
+
+.header__search:focus-within {
+  border-color: var(--primary);
+}
+
+.header__search input {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-main);
+  font-size: 0.875rem;
+  width: 180px;
+  padding: 0;
+}
+
+.header__search input::placeholder {
+  color: var(--text-muted);
+}
+
+.header__search:focus-within input {
+  border: none;
+}
+
+.header__search-icon {
+  color: var(--text-muted);
+  font-size: 18px;
+}
+
+.header__icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background-color: var(--hover-bg);
+  color: var(--text-muted);
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+  flex-shrink: 0;
+}
+
+.header__icon-btn:hover {
+  background-color: var(--border-color);
+  color: var(--primary);
+}
+
+.header__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--border-color);
+  background: linear-gradient(135deg, var(--primary), #6366f1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
