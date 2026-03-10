@@ -119,6 +119,7 @@ function MetaBar({
   onTagChange,
   toggleTagModal,
 }) {
+  const tagColor = tags.find((t) => t.name === tag)?.color || "transparent";
   return (
     <div className="editor__metabar">
       <Input
@@ -131,7 +132,7 @@ function MetaBar({
         {tag && (
           <span
             className="editor__tag-chip"
-            style={tags.find((t) => t.name === tag)?.style}
+            style={{ background: `${tagColor}20`, color: tagColor }}
           >
             {tag}
           </span>
@@ -155,7 +156,10 @@ function MetaBar({
                   className="editor__tag-picker-item"
                   onClick={() => onTagChange(t.name)}
                 >
-                  <span className="editor__tag-picker-dot" style={t.style} />
+                  <span
+                    className="editor__tag-picker-dot"
+                    style={{ backgroundColor: t.color }}
+                  />
                   {t.name}
                 </Button>
               ))}

@@ -1,18 +1,12 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
 
 // const NoteIdContext = createContext();
 const DataContext = createContext();
 
 const sampleTags = [
-  { id: 1, name: "Work", style: { backgroundColor: "blue" } },
-  { id: 2, name: "Personal", style: { backgroundColor: "green" } },
-  { id: 3, name: "Ideas", style: { backgroundColor: "yellow" } },
+  { id: "1", name: "Work", color: "#136dec" },
+  { id: "2", name: "Personal", color: "#10b981" },
+  { id: "3", name: "Ideas", color: "#f59e0b" },
 ];
 
 export const NoteProvider = ({ children }) => {
@@ -27,6 +21,13 @@ export const NoteProvider = ({ children }) => {
 
   function updateNoteId(id) {
     setNoteId(id);
+
+    const note = notes.find((n) => n.id === id);
+    if (note) {
+      setTitle(note.title);
+      setContent(note.content);
+      setTag(note.tag);
+    }
   }
 
   function resetNoteId() {
