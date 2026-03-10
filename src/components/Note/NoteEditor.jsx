@@ -39,8 +39,25 @@ function NoteEditor() {
   }
 
   function onBack() {
+    const note = {
+      title,
+      content,
+      tag,
+      faviorite: false,
+      shared: false,
+      trash: false,
+      style: {
+        color: tags.find((t) => t.name === tag)?.style.backgroundColor,
+        backgroundColor: `${tags.find((t) => t.name === tag)?.style.backgroundColor}20`,
+      },
+      date: new Date().toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }),
+    };
     resetNoteId();
-    addNote({ title, content, tag });
+    addNote(note);
     onTitleChange("");
     onContentChange("");
   }
@@ -111,6 +128,14 @@ function MetaBar({
         onChange={(e) => onTitleChange(e.target.value)}
       />
       <div className="editor__tags-row">
+        {tag && (
+          <span
+            className="editor__tag-chip"
+            style={tags.find((t) => t.name === tag)?.style}
+          >
+            {tag}
+          </span>
+        )}
         <div className="editor__tag-picker-container">
           <Button
             className="editor__add-tag-btn"

@@ -42,6 +42,16 @@ export const NoteProvider = ({ children }) => {
   }
 
   function addNote(note) {
+    console.log(noteId);
+    const existingNoteIndex = notes.findIndex((n) => n.id === noteId);
+
+    if (existingNoteIndex !== -1) {
+      const updatedNotes = [...notes];
+      updatedNotes[existingNoteIndex] = { ...note, id: noteId };
+      setNotes(updatedNotes);
+      return;
+    }
+
     note = { ...note, id: noteId };
     setNotes((prev) => [...prev, note]);
   }
