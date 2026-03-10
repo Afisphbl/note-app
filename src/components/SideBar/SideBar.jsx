@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Link } from "react-router";
 import {
   PlusIcon,
@@ -7,17 +7,15 @@ import {
   Users2Icon,
   Trash2Icon,
   Settings,
+  UploadCloud,
 } from "lucide-react";
 import { useDataContext } from "../../context/NoteProvider";
 import Button from "../Button/Button";
 import "./Sidebar.css";
 
 function SideBar() {
-  const { noteId, updateNoteId } = useDataContext();
-  let activeNoteId;
-  useEffect(() => {
-    activeNoteId = noteId;
-  }, [noteId]);
+  const { href, updateNoteId, updateHref } = useDataContext();
+  let id = crypto.randomUUID();
 
   return (
     <aside className="sidebar">
@@ -31,9 +29,12 @@ function SideBar() {
             </div>
           </div>
           <Link
-            to={`note/${activeNoteId}`}
+            to={`note/${id}`}
             className="sidebar__new-note-btn"
-            onClick={updateNoteId}
+            onClick={() => {
+              updateNoteId(id);
+              updateHref(window.location.pathname);
+            }}
           >
             <PlusIcon size={16} />
             New Note
@@ -41,23 +42,39 @@ function SideBar() {
         </div>
 
         <ul className="sidebar__nav">
-          <li className="sidebar__nav-item">
+          <Link
+            to="/"
+            className="sidebar__nav-item"
+            onClick={() => (href.current = window.location.pathname)}
+          >
             <FolderIcon size={16} />
             All Notes
-          </li>
+          </Link>
 
-          <li className="sidebar__nav-item">
+          <Link
+            to="favorites"
+            className="sidebar__nav-item"
+            onClick={() => (href.current = window.location.pathname)}
+          >
             <StarIcon size={16} />
             Favorites
-          </li>
-          <li className="sidebar__nav-item">
+          </Link>
+          <Link
+            to="shared"
+            className="sidebar__nav-item"
+            onClick={() => (href.current = window.location.pathname)}
+          >
             <Users2Icon size={16} />
             Shared
-          </li>
-          <li className="sidebar__nav-item">
+          </Link>
+          <Link
+            to="trash"
+            className="sidebar__nav-item"
+            onClick={() => (href.current = window.location.pathname)}
+          >
             <Trash2Icon size={16} />
-            Shared
-          </li>
+            Trash
+          </Link>
         </ul>
       </div>
 

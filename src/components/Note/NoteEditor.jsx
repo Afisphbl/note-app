@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router";
 import {
   ArrowLeft,
   StarIcon,
@@ -20,21 +21,41 @@ const sampleTags = [
 function NoteEditor() {
   const [tags, setTags] = useState(sampleTags);
   const [showTagPicker, setShowTagPicker] = useState(false);
-  const { resetNoteId } = useDataContext();
+  const {
+    title,
+    content,
+    tag,
+    href,
+    noteId,
+    resetNoteId,
+    onTitleChange,
+    onContentChange,
+    onTagChange,
+    addNote,
+  } = useDataContext();
 
   function toggleTagPicker() {
     setShowTagPicker((prev) => !prev);
   }
+
+  function onBack() {
+    resetNoteId();
+    addNote({ title, content, tag });
+    onTitleChange("");
+    onContentChange("");
+  }
+
   return (
-    <section className="editor">
+    <section className="editor" onClick={() => setShowTagPicker(false)}>
       <div className="editor__toolbar">
-        <Button
+        <Link
+          to={`${href.current}`}
           className="editor__toolbar-left editor__toolbar-btn"
           title="Go back to notes list"
-          onClick={resetNoteId}
+          onClick={onBack}
         >
           <ArrowLeft size={16} />
-        </Button>
+        </Link>
 
         <div className="editor__toolbar-right">
           <Button className="editor__toolbar-btn" title="Add to favorites">
@@ -51,10 +72,15 @@ function NoteEditor() {
 
       <MetaBar
         tags={tags}
+        title={title}
+        tag={tag}
         isTagPickerVisible={showTagPicker}
         toggleTagPicker={toggleTagPicker}
+        onTitleChange={onTitleChange}
+        onTagChange={onTagChange}
+        key={noteId}
       />
-      <EditorBody />
+      <EditorBody content={content} onContentChange={onContentChange} />
 
       <div className="editor__statusbar">
         <span>0 words</span>
@@ -67,22 +93,45 @@ function NoteEditor() {
   );
 }
 
-function MetaBar({ tags, isTagPickerVisible, toggleTagPicker }) {
+function MetaBar({
+  tags,
+  isTagPickerVisible,
+  toggleTagPicker,
+  title,
+  onTitleChange,
+  tag,
+  onTagChange,
+}) {
   return (
     <div className="editor__metabar">
-      <Input placeholder="Untitled Note" className="editor__title-input" />
+      <Input
+        placeholder="Untitled Note"
+        className="editor__title-input"
+        value={title}
+        onChange={(e) => onTitleChange(e.target.value)}
+      />
       <div className="editor__tags-row">
         <div className="editor__tag-picker-container">
-          <Button className="editor__add-tag-btn" onClick={toggleTagPicker}>
+          <Button
+            className="editor__add-tag-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleTagPicker();
+            }}
+          >
             + Add Tag
           </Button>
 
           {isTagPickerVisible && (
             <div className="editor__tag-picker">
-              {tags.map((tag) => (
-                <Button key={tag.id} className="editor__tag-picker-item">
-                  <span className="editor__tag-picker-dot" style={tag.style} />
-                  {tag.name}
+              {tags.map((t) => (
+                <Button
+                  key={t.id}
+                  className="editor__tag-picker-item"
+                  onClick={() => onTagChange(t.name)}
+                >
+                  <span className="editor__tag-picker-dot" style={t.style} />
+                  {t.name}
                 </Button>
               ))}
               <Button className="editor__tag-picker-item editor__tag-picker-item--manage">
@@ -97,13 +146,15 @@ function MetaBar({ tags, isTagPickerVisible, toggleTagPicker }) {
   );
 }
 
-function EditorBody() {
+function EditorBody({ content, onContentChange }) {
   return (
     <div className="editor__body">
       <textarea
         className="editor__content"
         placeholder="Start writing your note here..."
-        multiline
+        multiline="true"
+        value={content}
+        onChange={(e) => onContentChange(e.target.value)}
       />
     </div>
   );
