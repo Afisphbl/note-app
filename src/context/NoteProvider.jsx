@@ -9,12 +9,20 @@ import React, {
 // const NoteIdContext = createContext();
 const DataContext = createContext();
 
+const sampleTags = [
+  { id: 1, name: "Work", style: { backgroundColor: "blue" } },
+  { id: 2, name: "Personal", style: { backgroundColor: "green" } },
+  { id: 3, name: "Ideas", style: { backgroundColor: "yellow" } },
+];
+
 export const NoteProvider = ({ children }) => {
   const [noteId, setNoteId] = useState(null);
   const [notes, setNotes] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tag, setTag] = useState("");
+  const [tags, setTags] = useState(sampleTags);
+  const [isTagModalOpen, setIsTagModalOpen] = useState(false);
   const href = useRef();
 
   function updateNoteId(id) {
@@ -39,6 +47,23 @@ export const NoteProvider = ({ children }) => {
 
   function onTagChange(newTag) {
     setTag(newTag);
+  }
+
+  function toggleTagModal() {
+    setIsTagModalOpen((prev) => !prev);
+  }
+
+  function closeTagModal() {
+    setIsTagModalOpen(false);
+  }
+
+  function onAddTag(name, color) {
+    const newTag = {
+      id: Date.now(),
+      name,
+      style: { backgroundColor: color },
+    };
+    setTags((prev) => [...prev, newTag]);
   }
 
   function addNote(note) {
@@ -70,6 +95,11 @@ export const NoteProvider = ({ children }) => {
     onTitleChange,
     onContentChange,
     onTagChange,
+    isTagModalOpen,
+    toggleTagModal,
+    closeTagModal,
+    tags,
+    onAddTag,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

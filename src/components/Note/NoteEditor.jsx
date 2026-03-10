@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router";
 import {
   ArrowLeft,
@@ -10,21 +10,16 @@ import {
 import { useDataContext } from "../../context/NoteProvider";
 import Button from "../Button/Button";
 import Input from "../Input/Input";
+import TagManagerModal from "../TagModel/TagManagerModal";
 import "./NoteEditor.css";
 
-const sampleTags = [
-  { id: 1, name: "Work", style: { backgroundColor: "blue" } },
-  { id: 2, name: "Personal", style: { backgroundColor: "green" } },
-  { id: 3, name: "Ideas", style: { backgroundColor: "yellow" } },
-];
-
 function NoteEditor() {
-  const [tags, setTags] = useState(sampleTags);
   const [showTagPicker, setShowTagPicker] = useState(false);
   const {
     title,
     content,
     tag,
+    tags,
     href,
     noteId,
     resetNoteId,
@@ -32,6 +27,8 @@ function NoteEditor() {
     onContentChange,
     onTagChange,
     addNote,
+    isTagModalOpen,
+    toggleTagModal,
   } = useDataContext();
 
   function toggleTagPicker() {
@@ -95,10 +92,12 @@ function NoteEditor() {
         toggleTagPicker={toggleTagPicker}
         onTitleChange={onTitleChange}
         onTagChange={onTagChange}
+        toggleTagModal={toggleTagModal}
         key={noteId}
       />
       <EditorBody content={content} onContentChange={onContentChange} />
 
+      {isTagModalOpen && <TagManagerModal />}
       <div className="editor__statusbar">
         <span>0 words</span>
         <div className="editor__statusbar-saved">
@@ -118,6 +117,7 @@ function MetaBar({
   onTitleChange,
   tag,
   onTagChange,
+  toggleTagModal,
 }) {
   return (
     <div className="editor__metabar">
@@ -159,7 +159,10 @@ function MetaBar({
                   {t.name}
                 </Button>
               ))}
-              <Button className="editor__tag-picker-item editor__tag-picker-item--manage">
+              <Button
+                className="editor__tag-picker-item editor__tag-picker-item--manage"
+                onClick={toggleTagModal}
+              >
                 <SettingsIcon size={16} />
                 Manage Tags
               </Button>
