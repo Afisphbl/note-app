@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router";
 import {
   PlusIcon,
@@ -7,14 +7,13 @@ import {
   Users2Icon,
   Trash2Icon,
   Settings,
-  UploadCloud,
 } from "lucide-react";
 import { useDataContext } from "../../context/NoteProvider";
 import Button from "../Button/Button";
 import "./Sidebar.css";
 
 function SideBar() {
-  const { href, updateNoteId, updateHref } = useDataContext();
+  const { updateNoteId, updateHref, onBack } = useDataContext();
   let id = crypto.randomUUID();
 
   return (
@@ -34,6 +33,7 @@ function SideBar() {
             onClick={() => {
               updateNoteId(id);
               updateHref(window.location.pathname);
+              onBack();
             }}
           >
             <PlusIcon size={16} />
@@ -45,7 +45,10 @@ function SideBar() {
           <Link
             to="/"
             className="sidebar__nav-item"
-            onClick={() => (href.current = window.location.pathname)}
+            onClick={() => {
+              updateHref("/");
+              onBack();
+            }}
           >
             <FolderIcon size={16} />
             All Notes
@@ -54,7 +57,10 @@ function SideBar() {
           <Link
             to="favorites"
             className="sidebar__nav-item"
-            onClick={() => (href.current = window.location.pathname)}
+            onClick={() => {
+              updateHref("favorites");
+              onBack();
+            }}
           >
             <StarIcon size={16} />
             Favorites
@@ -62,7 +68,10 @@ function SideBar() {
           <Link
             to="shared"
             className="sidebar__nav-item"
-            onClick={() => (href.current = window.location.pathname)}
+            onClick={() => {
+              updateHref("shared");
+              onBack();
+            }}
           >
             <Users2Icon size={16} />
             Shared
@@ -70,7 +79,10 @@ function SideBar() {
           <Link
             to="trash"
             className="sidebar__nav-item"
-            onClick={() => (href.current = window.location.pathname)}
+            onClick={() => {
+              updateHref("trash");
+              onBack();
+            }}
           >
             <Trash2Icon size={16} />
             Trash

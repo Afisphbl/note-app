@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 // const NoteIdContext = createContext();
 const DataContext = createContext();
@@ -11,10 +11,14 @@ const sampleTags = [
 
 export const NoteProvider = ({ children }) => {
   const [notes, setNotes] = useState([]);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tag, setTag] = useState("");
+  const [isFavorite, setIsFavorite] = useState(false);
   const [noteId, setNoteId] = useState(null);
   const [tags, setTags] = useState(sampleTags);
   const [isTagModalOpen, setIsTagModalOpen] = useState(false);
-  const href = useRef("/");
+  const [href, setHref] = useState("/");
 
   function updateNoteId(id) {
     setNoteId(id);
@@ -25,7 +29,7 @@ export const NoteProvider = ({ children }) => {
   }
 
   function updateHref(newHref) {
-    href.current = newHref;
+    setHref(newHref);
   }
 
   function toggleTagModal() {
@@ -45,8 +49,55 @@ export const NoteProvider = ({ children }) => {
     setTags((prev) => [...prev, newTag]);
   }
 
+  function onTitleChange(newTitle) {
+    setTitle(newTitle);
+  }
+
+  function onContentChange(newContent) {
+    setContent(newContent);
+  }
+
+  function onTagChange(newTag) {
+    setTag(newTag);
+  }
+
+  function onFavoriteToggle() {
+    setIsFavorite((prev) => !prev);
+  }
+
+  function onBack() {
+    const note = {
+      title,
+      content,
+      tag,
+      isFavorite,
+      shared: false,
+      trash: false,
+      style: {
+        color: tags.find((t) => t.name === tag)?.style.backgroundColor,
+        backgroundColor: `${tags.find((t) => t.name === tag)?.style.backgroundColor}20`,
+      },
+      date: new Date().toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }),
+    };
+    resetNoteId();
+    addNote(note);
+  }
+
+  useEffect(() => {
+    const note = notes.find((n) => n.id === noteId);
+    if (note) {
+      setTitle(note.title);
+      setContent(note.content);
+      setTag(note.tag);
+      setIsFavorite(note.isFavorite);
+    }
+  }, [noteId, notes]);
+
   function addNote(note) {
-    console.log(noteId);
     const existingNoteIndex = notes.findIndex((n) => n.id === noteId);
 
     if (existingNoteIndex !== -1) {
@@ -73,6 +124,15 @@ export const NoteProvider = ({ children }) => {
     closeTagModal,
     tags,
     onAddTag,
+    onTitleChange,
+    onContentChange,
+    onTagChange,
+    onFavoriteToggle,
+    title,
+    tag,
+    content,
+    isFavorite,
+    onBack,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

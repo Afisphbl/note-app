@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router";
 import {
   ArrowLeft,
@@ -19,68 +19,75 @@ function NoteEditor() {
     tags,
     href,
     noteId,
-    resetNoteId,
-    addNote,
     isTagModalOpen,
     toggleTagModal,
-    notes,
+    onBack,
+    onFavoriteToggle,
+    title,
+    tag,
+    onTitleChange,
+    onContentChange,
+    onTagChange,
+    content,
   } = useDataContext();
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [tag, setTag] = useState("");
 
   function toggleTagPicker() {
     setShowTagPicker((prev) => !prev);
   }
 
-  function onTitleChange(newTitle) {
-    setTitle(newTitle);
-  }
+  // function onTitleChange(newTitle) {
+  //   setTitle(newTitle);
+  // }
 
-  function onContentChange(newContent) {
-    setContent(newContent);
-  }
+  // function onContentChange(newContent) {
+  //   setContent(newContent);
+  // }
 
-  function onTagChange(newTag) {
-    setTag(newTag);
-  }
+  // function onTagChange(newTag) {
+  //   setTag(newTag);
+  // }
 
-  useEffect(() => {
-    const note = notes.find((n) => n.id === noteId);
-    if (note) {
-      setTitle(note.title);
-      setContent(note.content);
-      setTag(note.tag);
-    }
-  }, [noteId, notes]);
+  // useEffect(() => {
+  //   const note = notes.find((n) => n.id === noteId);
+  //   if (note) {
+  //     setTitle(note.title);
+  //     setContent(note.content);
+  //     setTag(note.tag);
+  //     setIsFavorite(note.isFavorite);
+  //   }
+  // }, [noteId, notes]);
 
-  function onBack() {
-    const note = {
-      title,
-      content,
-      tag,
-      faviorite: false,
-      shared: false,
-      trash: false,
-      style: {
-        color: tags.find((t) => t.name === tag)?.style.backgroundColor,
-        backgroundColor: `${tags.find((t) => t.name === tag)?.style.backgroundColor}20`,
-      },
-      date: new Date().toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      }),
-    };
-    resetNoteId();
-    addNote(note);
-  }
+  // function onBack() {
+  //   const note = {
+  //     title,
+  //     content,
+  //     tag,
+  //     isFavorite,
+  //     shared: false,
+  //     trash: false,
+  //     style: {
+  //       color: tags.find((t) => t.name === tag)?.style.backgroundColor,
+  //       backgroundColor: `${tags.find((t) => t.name === tag)?.style.backgroundColor}20`,
+  //     },
+  //     date: new Date().toLocaleDateString("en-US", {
+  //       month: "short",
+  //       day: "numeric",
+  //       year: "numeric",
+  //     }),
+  //   };
+  //   resetNoteId();
+  //   addNote(note);
+  // }
+
+  // function onFavoriteToggle() {
+  //   setIsFavorite((prev) => !prev);
+  // }
 
   return (
     <section className="editor" onClick={() => setShowTagPicker(false)}>
       <div className="editor__toolbar">
         <Link
-          to={`${href.current}`}
+          to={href}
           className="editor__toolbar-left editor__toolbar-btn"
           title="Go back to notes list"
           onClick={onBack}
@@ -89,7 +96,11 @@ function NoteEditor() {
         </Link>
 
         <div className="editor__toolbar-right">
-          <Button className="editor__toolbar-btn" title="Add to favorites">
+          <Button
+            className="editor__toolbar-btn"
+            title="Add to favorites"
+            onClick={onFavoriteToggle}
+          >
             <StarIcon size={16} />
           </Button>
           <Button

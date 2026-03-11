@@ -3,19 +3,20 @@ import { useNavigate } from "react-router";
 import { useDataContext } from "../context/NoteProvider";
 import "./Dashboard.css";
 
-function Notes() {
+function Favorites() {
   const { notes, updateNoteId, updateHref } = useDataContext();
+  const favoriteNotes = notes.filter((note) => note.isFavorite);
 
   return (
     <div className="dashboard__list">
       <div className="dashboard__list-panel">
         <div className="dashboard__list-header">
-          <h2 className="dashboard__list-title">All Notes</h2>
-          <span className="dashboard__list-count">{notes.length}</span>
+          <h2 className="dashboard__list-title">Favorite Notes</h2>
+          <span className="dashboard__list-count">{favoriteNotes.length}</span>
         </div>
         <div className="dashboard__notes-scroll">
-          {notes.map((note) => (
-            <NoteItem
+          {favoriteNotes.map((note) => (
+            <FavoriteItem
               key={note.id}
               note={note}
               updateNoteId={updateNoteId}
@@ -28,7 +29,7 @@ function Notes() {
   );
 }
 
-function NoteItem({ note, updateNoteId, updateHref }) {
+function FavoriteItem({ note, updateNoteId, updateHref }) {
   const navigate = useNavigate();
 
   function onClick() {
@@ -55,4 +56,4 @@ function NoteItem({ note, updateNoteId, updateHref }) {
   );
 }
 
-export default Notes;
+export default Favorites;
