@@ -5,6 +5,7 @@ import SideBar from "./components/SideBar/SideBar";
 import NoteEditor from "./components/Note/NoteEditor";
 import Notes from "./Pages/Notes";
 import Favorites from "./Pages/Favorites";
+import Trash from "./Pages/Trash";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Notes />} />
             <Route path="favorites" element={<Favorites />} />
+            <Route path="trash" element={<Trash />} />
             <Route path="note/:id" element={<NoteEditor />} />
           </Routes>
         </main>

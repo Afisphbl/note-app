@@ -15,6 +15,7 @@ export const NoteProvider = ({ children }) => {
   const [content, setContent] = useState("");
   const [tag, setTag] = useState("");
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isTrash, setIsTrash] = useState(false);
   const [noteId, setNoteId] = useState(null);
   const [tags, setTags] = useState(sampleTags);
   const [isTagModalOpen, setIsTagModalOpen] = useState(false);
@@ -65,14 +66,19 @@ export const NoteProvider = ({ children }) => {
     setIsFavorite((prev) => !prev);
   }
 
+  function onTrashToggle() {
+    setIsTrash((prev) => !prev);
+  }
+
   function onBack() {
+    const isExistingNote = notes.some((n) => n.id === noteId);
     const note = {
       title,
       content,
       tag,
       isFavorite,
       shared: false,
-      trash: false,
+      isTrash,
       style: {
         color: tags.find((t) => t.name === tag)?.style.backgroundColor,
         backgroundColor: `${tags.find((t) => t.name === tag)?.style.backgroundColor}20`,
@@ -83,8 +89,12 @@ export const NoteProvider = ({ children }) => {
         year: "numeric",
       }),
     };
-    resetNoteId();
-    addNote(note);
+    const saved = addNote(note);
+
+    // Clear id only after a successful save of a newly created note.
+    if (saved && !isExistingNote) {
+      resetNoteId();
+    }
   }
 
   useEffect(() => {
@@ -94,6 +104,8 @@ export const NoteProvider = ({ children }) => {
       setContent(note.content);
       setTag(note.tag);
       setIsFavorite(note.isFavorite);
+      setIsTrash(note.isTrash);
+      // setNoteId(note.id);
     }
   }, [noteId, notes]);
 
@@ -104,11 +116,13 @@ export const NoteProvider = ({ children }) => {
       const updatedNotes = [...notes];
       updatedNotes[existingNoteIndex] = { ...note, id: noteId };
       setNotes(updatedNotes);
-      return;
+      return true;
     }
 
-    note = { ...note, id: noteId };
+    const newId = noteId ?? crypto.randomUUID();
+    note = { ...note, id: newId };
     setNotes((prev) => [...prev, note]);
+    return true;
   }
 
   const value = {
@@ -132,6 +146,8 @@ export const NoteProvider = ({ children }) => {
     tag,
     content,
     isFavorite,
+    isTrash,
+    onTrashToggle,
     onBack,
   };
 

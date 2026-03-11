@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
 import {
   ArrowLeft,
@@ -29,59 +29,12 @@ function NoteEditor() {
     onContentChange,
     onTagChange,
     content,
+    onTrashToggle,
   } = useDataContext();
 
   function toggleTagPicker() {
     setShowTagPicker((prev) => !prev);
   }
-
-  // function onTitleChange(newTitle) {
-  //   setTitle(newTitle);
-  // }
-
-  // function onContentChange(newContent) {
-  //   setContent(newContent);
-  // }
-
-  // function onTagChange(newTag) {
-  //   setTag(newTag);
-  // }
-
-  // useEffect(() => {
-  //   const note = notes.find((n) => n.id === noteId);
-  //   if (note) {
-  //     setTitle(note.title);
-  //     setContent(note.content);
-  //     setTag(note.tag);
-  //     setIsFavorite(note.isFavorite);
-  //   }
-  // }, [noteId, notes]);
-
-  // function onBack() {
-  //   const note = {
-  //     title,
-  //     content,
-  //     tag,
-  //     isFavorite,
-  //     shared: false,
-  //     trash: false,
-  //     style: {
-  //       color: tags.find((t) => t.name === tag)?.style.backgroundColor,
-  //       backgroundColor: `${tags.find((t) => t.name === tag)?.style.backgroundColor}20`,
-  //     },
-  //     date: new Date().toLocaleDateString("en-US", {
-  //       month: "short",
-  //       day: "numeric",
-  //       year: "numeric",
-  //     }),
-  //   };
-  //   resetNoteId();
-  //   addNote(note);
-  // }
-
-  // function onFavoriteToggle() {
-  //   setIsFavorite((prev) => !prev);
-  // }
 
   return (
     <section className="editor" onClick={() => setShowTagPicker(false)}>
@@ -106,6 +59,7 @@ function NoteEditor() {
           <Button
             className="editor__action-btn editor__action-btn--ghost editor__action-btn--danger"
             title="Delete note"
+            onClick={onTrashToggle}
           >
             <Trash2Icon size={16} />
           </Button>
