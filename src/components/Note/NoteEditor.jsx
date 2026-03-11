@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
 import {
   ArrowLeft,
@@ -16,24 +16,43 @@ import "./NoteEditor.css";
 function NoteEditor() {
   const [showTagPicker, setShowTagPicker] = useState(false);
   const {
-    title,
-    content,
-    tag,
     tags,
     href,
     noteId,
     resetNoteId,
-    onTitleChange,
-    onContentChange,
-    onTagChange,
     addNote,
     isTagModalOpen,
     toggleTagModal,
+    notes,
   } = useDataContext();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tag, setTag] = useState("");
 
   function toggleTagPicker() {
     setShowTagPicker((prev) => !prev);
   }
+
+  function onTitleChange(newTitle) {
+    setTitle(newTitle);
+  }
+
+  function onContentChange(newContent) {
+    setContent(newContent);
+  }
+
+  function onTagChange(newTag) {
+    setTag(newTag);
+  }
+
+  useEffect(() => {
+    const note = notes.find((n) => n.id === noteId);
+    if (note) {
+      setTitle(note.title);
+      setContent(note.content);
+      setTag(note.tag);
+    }
+  }, [noteId, notes]);
 
   function onBack() {
     const note = {
@@ -55,8 +74,6 @@ function NoteEditor() {
     };
     resetNoteId();
     addNote(note);
-    onTitleChange("");
-    onContentChange("");
   }
 
   return (
@@ -88,10 +105,10 @@ function NoteEditor() {
         tags={tags}
         title={title}
         tag={tag}
-        isTagPickerVisible={showTagPicker}
-        toggleTagPicker={toggleTagPicker}
         onTitleChange={onTitleChange}
         onTagChange={onTagChange}
+        isTagPickerVisible={showTagPicker}
+        toggleTagPicker={toggleTagPicker}
         toggleTagModal={toggleTagModal}
         key={noteId}
       />
@@ -111,13 +128,13 @@ function NoteEditor() {
 
 function MetaBar({
   tags,
+  title,
+  tag,
   isTagPickerVisible,
   toggleTagPicker,
-  title,
-  onTitleChange,
-  tag,
-  onTagChange,
   toggleTagModal,
+  onTitleChange,
+  onTagChange,
 }) {
   const tagColor = tags.find((t) => t.name === tag)?.color || "transparent";
   return (

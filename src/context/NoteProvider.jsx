@@ -10,24 +10,14 @@ const sampleTags = [
 ];
 
 export const NoteProvider = ({ children }) => {
-  const [noteId, setNoteId] = useState(null);
   const [notes, setNotes] = useState([]);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [tag, setTag] = useState("");
+  const [noteId, setNoteId] = useState(null);
   const [tags, setTags] = useState(sampleTags);
   const [isTagModalOpen, setIsTagModalOpen] = useState(false);
-  const href = useRef();
+  const href = useRef("/");
 
   function updateNoteId(id) {
     setNoteId(id);
-
-    const note = notes.find((n) => n.id === id);
-    if (note) {
-      setTitle(note.title);
-      setContent(note.content);
-      setTag(note.tag);
-    }
   }
 
   function resetNoteId() {
@@ -36,18 +26,6 @@ export const NoteProvider = ({ children }) => {
 
   function updateHref(newHref) {
     href.current = newHref;
-  }
-
-  function onTitleChange(newTitle) {
-    setTitle(newTitle);
-  }
-
-  function onContentChange(newContent) {
-    setContent(newContent);
-  }
-
-  function onTagChange(newTag) {
-    setTag(newTag);
   }
 
   function toggleTagModal() {
@@ -85,17 +63,11 @@ export const NoteProvider = ({ children }) => {
   const value = {
     notes,
     noteId,
-    title,
-    content,
-    tag,
     href,
     updateNoteId,
     resetNoteId,
     updateHref,
     addNote,
-    onTitleChange,
-    onContentChange,
-    onTagChange,
     isTagModalOpen,
     toggleTagModal,
     closeTagModal,

@@ -13,7 +13,7 @@ const TAG_COLORS = [
 ];
 
 export default function TagManagerModal() {
-  const { tags, toggleTagModal, closeTagModal, onAddTag } = useDataContext();
+  const { tags, closeTagModal, onAddTag } = useDataContext();
   const [newTagName, setNewTagName] = useState("");
   const [newTagColor, setNewTagColor] = useState(TAG_COLORS[0]);
 
