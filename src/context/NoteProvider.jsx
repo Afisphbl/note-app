@@ -45,7 +45,7 @@ export const NoteProvider = ({ children }) => {
     const newTag = {
       id: Date.now(),
       name,
-      style: { backgroundColor: color },
+      color,
     };
     setTags((prev) => [...prev, newTag]);
   }
@@ -66,9 +66,17 @@ export const NoteProvider = ({ children }) => {
     setIsFavorite((prev) => !prev);
   }
 
+  useEffect(() => {
+    isFavorite && setIsTrash(false);
+  }, [isFavorite]);
+
   function onTrashToggle() {
     setIsTrash((prev) => !prev);
   }
+
+  useEffect(() => {
+    isTrash && setIsFavorite(false);
+  }, [isTrash]);
 
   function onBack() {
     const isExistingNote = notes.some((n) => n.id === noteId);
@@ -80,8 +88,8 @@ export const NoteProvider = ({ children }) => {
       shared: false,
       isTrash,
       style: {
-        color: tags.find((t) => t.name === tag)?.style.backgroundColor,
-        backgroundColor: `${tags.find((t) => t.name === tag)?.style.backgroundColor}20`,
+        color: tags.find((t) => t.name === tag)?.color,
+        backgroundColor: `${tags.find((t) => t.name === tag)?.color}20`,
       },
       date: new Date().toLocaleDateString("en-US", {
         month: "short",
@@ -89,12 +97,16 @@ export const NoteProvider = ({ children }) => {
         year: "numeric",
       }),
     };
-    const saved = addNote(note);
 
-    // Clear id only after a successful save of a newly created note.
-    if (saved && !isExistingNote) {
+    addNote(note);
+    if (!isExistingNote) {
       resetNoteId();
     }
+    setTitle("");
+    setContent("");
+    setTag("");
+    setIsFavorite(false);
+    setIsTrash(false);
   }
 
   useEffect(() => {
@@ -116,13 +128,13 @@ export const NoteProvider = ({ children }) => {
       const updatedNotes = [...notes];
       updatedNotes[existingNoteIndex] = { ...note, id: noteId };
       setNotes(updatedNotes);
-      return true;
+      return;
     }
 
     const newId = noteId ?? crypto.randomUUID();
     note = { ...note, id: newId };
     setNotes((prev) => [...prev, note]);
-    return true;
+    return;
   }
 
   const value = {

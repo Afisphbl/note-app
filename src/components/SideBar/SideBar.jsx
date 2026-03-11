@@ -33,7 +33,6 @@ function SideBar() {
             onClick={() => {
               updateNoteId(id);
               updateHref(window.location.pathname);
-              onBack();
             }}
           >
             <PlusIcon size={16} />
@@ -47,7 +46,6 @@ function SideBar() {
             className="sidebar__nav-item"
             onClick={() => {
               updateHref("/");
-              onBack();
             }}
           >
             <FolderIcon size={16} />
@@ -59,7 +57,6 @@ function SideBar() {
             className="sidebar__nav-item"
             onClick={() => {
               updateHref("favorites");
-              onBack();
             }}
           >
             <StarIcon size={16} />
@@ -70,7 +67,6 @@ function SideBar() {
             className="sidebar__nav-item"
             onClick={() => {
               updateHref("shared");
-              onBack();
             }}
           >
             <Users2Icon size={16} />
@@ -81,7 +77,6 @@ function SideBar() {
             className="sidebar__nav-item"
             onClick={() => {
               updateHref("trash");
-              onBack();
             }}
           >
             <Trash2Icon size={16} />

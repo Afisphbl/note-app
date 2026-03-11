@@ -5,23 +5,25 @@ import "./Dashboard.css";
 
 function Notes() {
   const { notes, updateNoteId, updateHref } = useDataContext();
+  const allNotes = notes.filter((note) => !note.isTrash);
 
   return (
     <div className="dashboard__list">
       <div className="dashboard__list-panel">
         <div className="dashboard__list-header">
           <h2 className="dashboard__list-title">All Notes</h2>
-          <span className="dashboard__list-count">{notes.length}</span>
+          <span className="dashboard__list-count">{allNotes.length}</span>
         </div>
         <div className="dashboard__notes-scroll">
-          {notes.map((note) => (
-            <NoteItem
-              key={note.id}
-              note={note}
-              updateNoteId={updateNoteId}
-              updateHref={updateHref}
-            />
-          ))}
+          {allNotes.length !== 0 &&
+            allNotes.map((note) => (
+              <NoteItem
+                key={note.id}
+                note={note}
+                updateNoteId={updateNoteId}
+                updateHref={updateHref}
+              />
+            ))}
         </div>
       </div>
     </div>

@@ -19,6 +19,7 @@ function NoteEditor() {
     tags,
     href,
     noteId,
+    notes,
     isTagModalOpen,
     toggleTagModal,
     onBack,
@@ -35,6 +36,8 @@ function NoteEditor() {
   function toggleTagPicker() {
     setShowTagPicker((prev) => !prev);
   }
+
+  const note = notes.find((n) => n.id === noteId);
 
   return (
     <section className="editor" onClick={() => setShowTagPicker(false)}>
@@ -57,7 +60,7 @@ function NoteEditor() {
             <StarIcon size={16} />
           </Button>
           <Button
-            className="editor__action-btn editor__action-btn--ghost editor__action-btn--danger"
+            className={`editor__action-btn editor__action-btn--ghost editor__action-btn--danger ${note?.isTrash ? "active" : ""}`}
             title="Delete note"
             onClick={onTrashToggle}
           >

@@ -105,6 +105,11 @@
   color: #dc2626;
 }
 
+.editor__action-btn--danger.active {
+  background-color: #dc2626;
+  color: #fee2e2;
+}
+
 /* ---- Meta bar (title, tags) ---- */
 .editor__metabar {
   padding: 1.25rem 2rem 0.75rem;
