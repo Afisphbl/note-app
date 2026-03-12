@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router";
+import React, { useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router";
 import {
   ArrowLeft,
   StarIcon,
@@ -14,42 +14,125 @@ import TagManagerModal from "../TagModel/TagManagerModal";
 import "./NoteEditor.css";
 
 function NoteEditor() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { id } = useParams();
   const [showTagPicker, setShowTagPicker] = useState(false);
-  const {
-    tags,
-    href,
-    noteId,
-    notes,
-    isTagModalOpen,
-    toggleTagModal,
-    onBack,
-    onFavoriteToggle,
-    title,
-    tag,
-    onTitleChange,
-    onContentChange,
-    onTagChange,
-    content,
-    onTrashToggle,
-  } = useDataContext();
+  const [isTagModalOpen, setIsTagModalOpen] = useState(false);
+  const [tags, setTags] = useState([
+    { id: "1", name: "Work", color: "#136dec" },
+    { id: "2", name: "Personal", color: "#10b981" },
+    { id: "3", name: "Ideas", color: "#f59e0b" },
+  ]);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [tag, setTag] = useState("");
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isTrash, setIsTrash] = useState(false);
+
+  const { notes, addNote, deleteNote, toggleFavorite, updateNote } =
+    useDataContext();
 
   function toggleTagPicker() {
     setShowTagPicker((prev) => !prev);
   }
 
-  const note = notes.find((n) => n.id === noteId);
+  const note = useMemo(() => notes.find((n) => n.id === id), [notes, id]);
+  const backTo = location.state?.from ?? "/";
+
+  useEffect(() => {
+    if (note) {
+      setTitle(note.title ?? "");
+      setContent(note.content ?? "");
+      setTag(note.tag ?? "");
+      setIsFavorite(Boolean(note.isFavorite));
+      setIsTrash(Boolean(note.isTrash));
+      return;
+    }
+
+    setTitle("");
+    setContent("");
+    setTag("");
+    setIsFavorite(false);
+    setIsTrash(false);
+  }, [note, id]);
+
+  function toggleTagModal() {
+    setIsTagModalOpen((prev) => !prev);
+  }
+
+  function closeTagModal() {
+    setIsTagModalOpen(false);
+  }
+
+  function onAddTag(name, color) {
+    const newTag = {
+      id: Date.now().toString(),
+      name,
+      color,
+    };
+    setTags((prev) => [...prev, newTag]);
+  }
+
+  function buildNotePayload() {
+    const color = tags.find((t) => t.name === tag)?.color;
+    return {
+      title,
+      content,
+      tag,
+      isFavorite,
+      isTrash,
+      shared: false,
+      style: {
+        color,
+        backgroundColor: color ? `${color}20` : "transparent",
+      },
+      date: note?.date,
+    };
+  }
+
+  function onFavoriteToggle() {
+    setIsFavorite((prev) => !prev);
+    if (note) {
+      toggleFavorite(note.id);
+      setIsTrash(false);
+    }
+  }
+
+  function onTrashToggle() {
+    setIsTrash((prev) => !prev);
+    if (note && !note.isTrash) {
+      deleteNote(note.id);
+      setIsFavorite(false);
+      return;
+    }
+    if (note && note.isTrash) {
+      updateNote(note.id, { isTrash: false });
+    }
+  }
+
+  function onBack() {
+    const payload = buildNotePayload();
+    if (note) {
+      updateNote(note.id, payload);
+    } else {
+      addNote({ ...payload, id });
+    }
+
+    navigate(backTo);
+  }
 
   return (
     <section className="editor" onClick={() => setShowTagPicker(false)}>
       <div className="editor__toolbar">
-        <Link
-          to={href}
+        <button
+          type="button"
           className="editor__toolbar-left editor__toolbar-btn"
           title="Go back to notes list"
           onClick={onBack}
         >
           <ArrowLeft size={16} />
-        </Link>
+        </button>
 
         <div className="editor__toolbar-right">
           <Button
@@ -60,7 +143,7 @@ function NoteEditor() {
             <StarIcon size={16} />
           </Button>
           <Button
-            className={`editor__action-btn editor__action-btn--ghost editor__action-btn--danger ${note?.isTrash ? "active" : ""}`}
+            className={`editor__action-btn editor__action-btn--ghost editor__action-btn--danger ${isTrash ? "active" : ""}`}
             title="Delete note"
             onClick={onTrashToggle}
           >
@@ -73,16 +156,22 @@ function NoteEditor() {
         tags={tags}
         title={title}
         tag={tag}
-        onTitleChange={onTitleChange}
-        onTagChange={onTagChange}
+        onTitleChange={setTitle}
+        onTagChange={setTag}
         isTagPickerVisible={showTagPicker}
         toggleTagPicker={toggleTagPicker}
         toggleTagModal={toggleTagModal}
-        key={noteId}
+        key={id}
       />
-      <EditorBody content={content} onContentChange={onContentChange} />
+      <EditorBody content={content} onContentChange={setContent} />
 
-      {isTagModalOpen && <TagManagerModal />}
+      {isTagModalOpen && (
+        <TagManagerModal
+          tags={tags}
+          closeTagModal={closeTagModal}
+          onAddTag={onAddTag}
+        />
+      )}
       <div className="editor__statusbar">
         <span>0 words</span>
         <div className="editor__statusbar-saved">

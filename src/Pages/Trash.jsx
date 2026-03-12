@@ -4,7 +4,7 @@ import { useDataContext } from "../context/NoteProvider";
 import "./Dashboard.css";
 
 function Trash() {
-  const { notes, updateNoteId, updateHref } = useDataContext();
+  const { notes } = useDataContext();
   const trashNotes = notes.filter((note) => note.isTrash);
 
   return (
@@ -16,12 +16,7 @@ function Trash() {
         </div>
         <div className="dashboard__notes-scroll">
           {trashNotes.map((note) => (
-            <TrashItem
-              key={note.id}
-              note={note}
-              updateNoteId={updateNoteId}
-              updateHref={updateHref}
-            />
+            <TrashItem key={note.id} note={note} />
           ))}
         </div>
       </div>
@@ -29,13 +24,11 @@ function Trash() {
   );
 }
 
-function TrashItem({ note, updateNoteId, updateHref }) {
+function TrashItem({ note }) {
   const navigate = useNavigate();
 
   function onClick() {
-    updateHref(window.location.pathname);
-    updateNoteId(note.id);
-    navigate(`/note/${note.id}`);
+    navigate(`/note/${note.id}`, { state: { from: window.location.pathname } });
   }
   return (
     <div className="dashboard__note-card" onClick={onClick}>

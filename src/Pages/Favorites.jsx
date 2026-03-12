@@ -4,7 +4,7 @@ import { useDataContext } from "../context/NoteProvider";
 import "./Dashboard.css";
 
 function Favorites() {
-  const { notes, updateNoteId, updateHref } = useDataContext();
+  const { notes } = useDataContext();
   const favoriteNotes = notes.filter((note) => note.isFavorite);
 
   return (
@@ -16,12 +16,7 @@ function Favorites() {
         </div>
         <div className="dashboard__notes-scroll">
           {favoriteNotes.map((note) => (
-            <FavoriteItem
-              key={note.id}
-              note={note}
-              updateNoteId={updateNoteId}
-              updateHref={updateHref}
-            />
+            <FavoriteItem key={note.id} note={note} />
           ))}
         </div>
       </div>
@@ -29,13 +24,11 @@ function Favorites() {
   );
 }
 
-function FavoriteItem({ note, updateNoteId, updateHref }) {
+function FavoriteItem({ note }) {
   const navigate = useNavigate();
 
   function onClick() {
-    updateHref(window.location.pathname);
-    updateNoteId(note.id);
-    navigate(`/note/${note.id}`);
+    navigate(`/note/${note.id}`, { state: { from: window.location.pathname } });
   }
   return (
     <div className="dashboard__note-card" onClick={onClick}>

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router";
+import { Routes, Route } from "react-router";
 import { useDataContext } from "../context/NoteProvider";
 import NoteEditor from "../components/Note/NoteEditor";
 import EmptyNote from "../components/Empty/EmptyNote";

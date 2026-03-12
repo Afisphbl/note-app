@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useDataContext } from "../../context/NoteProvider";
 import "./TagManagerModal.css";
 
 const TAG_COLORS = [
@@ -12,8 +11,7 @@ const TAG_COLORS = [
   "#06b6d4",
 ];
 
-export default function TagManagerModal() {
-  const { tags, closeTagModal, onAddTag } = useDataContext();
+export default function TagManagerModal({ tags, closeTagModal, onAddTag }) {
   const [newTagName, setNewTagName] = useState("");
   const [newTagColor, setNewTagColor] = useState(TAG_COLORS[0]);
 

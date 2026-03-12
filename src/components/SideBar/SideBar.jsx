@@ -8,12 +8,10 @@ import {
   Trash2Icon,
   Settings,
 } from "lucide-react";
-import { useDataContext } from "../../context/NoteProvider";
 import Button from "../Button/Button";
 import "./Sidebar.css";
 
 function SideBar() {
-  const { updateNoteId, updateHref, onBack } = useDataContext();
   let id = crypto.randomUUID();
 
   return (
@@ -30,10 +28,7 @@ function SideBar() {
           <Link
             to={`note/${id}`}
             className="sidebar__new-note-btn"
-            onClick={() => {
-              updateNoteId(id);
-              updateHref(window.location.pathname);
-            }}
+            state={{ from: window.location.pathname }}
           >
             <PlusIcon size={16} />
             New Note
@@ -41,44 +36,20 @@ function SideBar() {
         </div>
 
         <ul className="sidebar__nav">
-          <Link
-            to="/"
-            className="sidebar__nav-item"
-            onClick={() => {
-              updateHref("/");
-            }}
-          >
+          <Link to="/" className="sidebar__nav-item">
             <FolderIcon size={16} />
             All Notes
           </Link>
 
-          <Link
-            to="favorites"
-            className="sidebar__nav-item"
-            onClick={() => {
-              updateHref("favorites");
-            }}
-          >
+          <Link to="favorites" className="sidebar__nav-item">
             <StarIcon size={16} />
             Favorites
           </Link>
-          <Link
-            to="shared"
-            className="sidebar__nav-item"
-            onClick={() => {
-              updateHref("shared");
-            }}
-          >
+          <Link to="shared" className="sidebar__nav-item">
             <Users2Icon size={16} />
             Shared
           </Link>
-          <Link
-            to="trash"
-            className="sidebar__nav-item"
-            onClick={() => {
-              updateHref("trash");
-            }}
-          >
+          <Link to="trash" className="sidebar__nav-item">
             <Trash2Icon size={16} />
             Trash
           </Link>

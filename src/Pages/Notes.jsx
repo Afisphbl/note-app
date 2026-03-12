@@ -4,7 +4,7 @@ import { useDataContext } from "../context/NoteProvider";
 import "./Dashboard.css";
 
 function Notes() {
-  const { notes, updateNoteId, updateHref } = useDataContext();
+  const { notes } = useDataContext();
   const allNotes = notes.filter((note) => !note.isTrash);
 
   return (
@@ -16,27 +16,18 @@ function Notes() {
         </div>
         <div className="dashboard__notes-scroll">
           {allNotes.length !== 0 &&
-            allNotes.map((note) => (
-              <NoteItem
-                key={note.id}
-                note={note}
-                updateNoteId={updateNoteId}
-                updateHref={updateHref}
-              />
-            ))}
+            allNotes.map((note) => <NoteItem key={note.id} note={note} />)}
         </div>
       </div>
     </div>
   );
 }
 
-function NoteItem({ note, updateNoteId, updateHref }) {
+function NoteItem({ note }) {
   const navigate = useNavigate();
 
   function onClick() {
-    updateHref(window.location.pathname);
-    updateNoteId(note.id);
-    navigate(`/note/${note.id}`);
+    navigate(`/note/${note.id}`, { state: { from: window.location.pathname } });
   }
   return (
     <div className="dashboard__note-card" onClick={onClick}>
