@@ -5,6 +5,7 @@ import EmptyNote from "../components/Empty/EmptyNote";
 import Notes from "./Notes";
 import Favorites from "./Favorites";
 import Trash from "./Trash";
+import Settings from "../components/Settings/Settings";
 
 function NoteEditorPane() {
   return (
@@ -73,6 +74,7 @@ function DashBoard() {
             )
           }
         />
+        <Route path="settings" element={<Settings />} />
         <Route path="note/:id" element={renderEditorInSection()} />
       </Routes>
     </div>

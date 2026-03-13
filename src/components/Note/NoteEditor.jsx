@@ -11,7 +11,7 @@ import {
 import { useDataContext } from "../../context/NoteProvider";
 import Button from "../Button/Button";
 import Input from "../Input/Input";
-import TagManagerModal from "../TagModel/TagManagerModal";
+import TagManagerModal from "../Modals/TagManagerModal";
 import "./NoteEditor.css";
 
 function NoteEditor() {

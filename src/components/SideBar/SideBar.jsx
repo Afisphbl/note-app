@@ -57,10 +57,10 @@ function SideBar() {
       </div>
 
       <div className="sidebar__bottom">
-        <Button className="sidebar__nav-item">
+        <Link to="settings" className="sidebar__nav-item">
           <Settings size={16} />
           <span>Settings</span>
-        </Button>
+        </Link>
       </div>
     </aside>
   );
