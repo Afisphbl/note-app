@@ -1,10 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router";
+import { ArchiveRestore } from "lucide-react";
 import { useDataContext } from "../context/NoteProvider";
 import "./Dashboard.css";
 
 function Trash() {
-  const { notes } = useDataContext();
+  const { notes, restoreNote } = useDataContext();
   const trashNotes = notes.filter((note) => note.isTrash);
 
   return (
@@ -16,7 +17,7 @@ function Trash() {
         </div>
         <div className="dashboard__notes-scroll">
           {trashNotes.map((note) => (
-            <TrashItem key={note.id} note={note} />
+            <TrashItem key={note.id} note={note} restoreNote={restoreNote} />
           ))}
         </div>
       </div>
@@ -24,12 +25,18 @@ function Trash() {
   );
 }
 
-function TrashItem({ note }) {
+function TrashItem({ note, restoreNote }) {
   const navigate = useNavigate();
 
   function onClick() {
     navigate(`/note/${note.id}`, { state: { from: window.location.pathname } });
   }
+
+  function onRestore(event) {
+    event.stopPropagation();
+    restoreNote(note.id);
+  }
+
   return (
     <div className="dashboard__note-card" onClick={onClick}>
       <h3 className="dashboard__note-title">
@@ -45,6 +52,14 @@ function TrashItem({ note }) {
           </span>
         </div>
       </div>
+      <button
+        type="button"
+        className="dashboard__restore-btn"
+        onClick={onRestore}
+      >
+        <ArchiveRestore size={14} />
+        Restore
+      </button>
     </div>
   );
 }

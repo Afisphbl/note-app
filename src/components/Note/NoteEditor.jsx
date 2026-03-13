@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   StarIcon,
   Trash2Icon,
+  ArchiveRestore,
   SettingsIcon,
   CheckCircle2,
 } from "lucide-react";
@@ -30,14 +31,21 @@ function NoteEditor() {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isTrash, setIsTrash] = useState(false);
 
-  const { notes, addNote, deleteNote, toggleFavorite, updateNote } =
-    useDataContext();
+  const {
+    notes,
+    addNote,
+    deleteNote,
+    restoreNote,
+    toggleFavorite,
+    updateNote,
+  } = useDataContext();
 
   function toggleTagPicker() {
     setShowTagPicker((prev) => !prev);
   }
 
   const note = useMemo(() => notes.find((n) => n.id === id), [notes, id]);
+
   const backTo = location.state?.from ?? "/";
 
   useEffect(() => {
@@ -107,8 +115,18 @@ function NoteEditor() {
       return;
     }
     if (note && note.isTrash) {
-      updateNote(note.id, { isTrash: false });
+      restoreNote(note.id);
     }
+  }
+
+  function onRestore() {
+    if (!note) {
+      setIsTrash(false);
+      return;
+    }
+
+    restoreNote(note.id);
+    setIsTrash(false);
   }
 
   function onBack() {
@@ -142,12 +160,24 @@ function NoteEditor() {
           >
             <StarIcon size={16} />
           </Button>
+          {isTrash && (
+            <Button
+              className="editor__action-btn editor__action-btn--restore"
+              title="Restore note"
+              onClick={onRestore}
+            >
+              <ArchiveRestore size={16} />
+              Restore
+            </Button>
+          )}
+
           <Button
             className={`editor__action-btn editor__action-btn--ghost editor__action-btn--danger ${isTrash ? "active" : ""}`}
             title="Delete note"
             onClick={onTrashToggle}
           >
             <Trash2Icon size={16} />
+            Delete
           </Button>
         </div>
       </div>

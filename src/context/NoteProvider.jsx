@@ -42,6 +42,19 @@ export const NoteProvider = ({ children }) => {
     );
   }
 
+  function restoreNote(id) {
+    setNotes((prev) =>
+      prev.map((note) =>
+        note.id === id
+          ? {
+              ...note,
+              isTrash: false,
+            }
+          : note,
+      ),
+    );
+  }
+
   function toggleFavorite(id) {
     setNotes((prev) =>
       prev.map((note) =>
@@ -73,6 +86,7 @@ export const NoteProvider = ({ children }) => {
     notes,
     addNote,
     deleteNote,
+    restoreNote,
     toggleFavorite,
     updateNote,
   };
