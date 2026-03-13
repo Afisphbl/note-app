@@ -1,10 +1,29 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 // const NoteIdContext = createContext();
 const DataContext = createContext();
+const NOTES_STORAGE_KEY = "notes-app:notes";
+
+function getStoredNotes() {
+  try {
+    const savedNotes = localStorage.getItem(NOTES_STORAGE_KEY);
+    if (!savedNotes) {
+      return [];
+    }
+
+    const parsedNotes = JSON.parse(savedNotes);
+    return Array.isArray(parsedNotes) ? parsedNotes : [];
+  } catch {
+    return [];
+  }
+}
 
 export const NoteProvider = ({ children }) => {
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState(getStoredNotes);
+
+  useEffect(() => {
+    localStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(notes));
+  }, [notes]);
 
   function addNote(note) {
     const nextNote = {
