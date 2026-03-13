@@ -1,10 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import { ArchiveRestore } from "lucide-react";
+import { ArchiveRestore, SearchX } from "lucide-react";
 import { useDataContext } from "../context/NoteProvider";
 import "./Dashboard.css";
 
-function Trash() {
+function Trash({ rightPane }) {
   const { notes, restoreNote } = useDataContext();
   const trashNotes = notes.filter((note) => note.isTrash);
 
@@ -12,15 +12,30 @@ function Trash() {
     <div className="dashboard__list">
       <div className="dashboard__list-panel">
         <div className="dashboard__list-header">
-          <h2 className="dashboard__list-title">Trash</h2>
+          <h2 className="dashboard__list-title dashboard__folder-title">
+            Trash
+          </h2>
           <span className="dashboard__list-count">{trashNotes.length}</span>
         </div>
         <div className="dashboard__notes-scroll">
-          {trashNotes.map((note) => (
-            <TrashItem key={note.id} note={note} restoreNote={restoreNote} />
-          ))}
+          {trashNotes.length === 0 ? (
+            <div className="dashboard__no-results">
+              <SearchX size={36} className="dashboard__no-results-icon" />
+              <p>Trash is empty.</p>
+            </div>
+          ) : (
+            trashNotes.map((note) => (
+              <TrashItem key={note.id} note={note} restoreNote={restoreNote} />
+            ))
+          )}
         </div>
       </div>
+      {rightPane ?? (
+        <div className="dashboard__select-prompt">
+          <h3>Review trashed notes</h3>
+          <p>Open a note to restore it or delete it permanently.</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -45,7 +60,9 @@ function TrashItem({ note, restoreNote }) {
       <p className="dashboard__note-preview">{note.content || "No content"}</p>
 
       <div className="dashboard__note-meta">
-        <span className="dashboard__note-data">{note.date}</span>
+        <span className="dashboard__note-data dashboard__note-date">
+          {note.date}
+        </span>
         <div className="dashboard__note-tags">
           <span className="dashboard__note-tag" style={note.style}>
             {note.tag}

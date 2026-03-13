@@ -124,7 +124,8 @@
   flex-shrink: 0;
 }
 
-.dashboard__folder-title {
+.dashboard__folder-title,
+.dashboard__list-title {
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-main);
@@ -192,7 +193,8 @@
   color: var(--text-muted);
 }
 
-.dashboard__note-date {
+.dashboard__note-date,
+.dashboard__note-data {
   font-size: 0.75rem;
 }
 
@@ -266,4 +268,12 @@
   color: var(--text-muted);
   text-align: center;
   padding: 2rem;
+}
+
+.dashboard__select-prompt--editor {
+  padding: 0;
+  text-align: initial;
+  align-items: stretch;
+  justify-content: stretch;
+  overflow: hidden;
 }

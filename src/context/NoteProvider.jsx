@@ -29,8 +29,18 @@ export const NoteProvider = ({ children }) => {
   }
 
   function deleteNote(id) {
-    setNotes((prev) =>
-      prev.map((note) =>
+    setNotes((prev) => {
+      const target = prev.find((note) => note.id === id);
+
+      if (!target) {
+        return prev;
+      }
+
+      if (target.isTrash) {
+        return prev.filter((note) => note.id !== id);
+      }
+
+      return prev.map((note) =>
         note.id === id
           ? {
               ...note,
@@ -38,8 +48,8 @@ export const NoteProvider = ({ children }) => {
               isFavorite: false,
             }
           : note,
-      ),
-    );
+      );
+    });
   }
 
   function restoreNote(id) {

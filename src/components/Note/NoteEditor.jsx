@@ -30,6 +30,8 @@ function NoteEditor() {
   const [tag, setTag] = useState("");
   const [isFavorite, setIsFavorite] = useState(false);
   const [isTrash, setIsTrash] = useState(false);
+  const [showPermanentDeleteConfirm, setShowPermanentDeleteConfirm] =
+    useState(false);
 
   const {
     notes,
@@ -55,6 +57,7 @@ function NoteEditor() {
       setTag(note.tag ?? "");
       setIsFavorite(Boolean(note.isFavorite));
       setIsTrash(Boolean(note.isTrash));
+      setShowPermanentDeleteConfirm(false);
       return;
     }
 
@@ -63,6 +66,7 @@ function NoteEditor() {
     setTag("");
     setIsFavorite(false);
     setIsTrash(false);
+    setShowPermanentDeleteConfirm(false);
   }, [note, id]);
 
   function toggleTagModal() {
@@ -108,15 +112,33 @@ function NoteEditor() {
   }
 
   function onTrashToggle() {
-    setIsTrash((prev) => !prev);
     if (note && !note.isTrash) {
       deleteNote(note.id);
+      setIsTrash(true);
       setIsFavorite(false);
+      setShowPermanentDeleteConfirm(false);
       return;
     }
+
     if (note && note.isTrash) {
-      restoreNote(note.id);
+      setShowPermanentDeleteConfirm(true);
+      return;
     }
+
+    setIsTrash((prev) => !prev);
+  }
+
+  function onConfirmPermanentDelete() {
+    if (!note) {
+      return;
+    }
+
+    deleteNote(note.id);
+    navigate(backTo);
+  }
+
+  function onCancelPermanentDelete() {
+    setShowPermanentDeleteConfirm(false);
   }
 
   function onRestore() {
@@ -127,6 +149,7 @@ function NoteEditor() {
 
     restoreNote(note.id);
     setIsTrash(false);
+    setShowPermanentDeleteConfirm(false);
   }
 
   function onBack() {
@@ -181,6 +204,28 @@ function NoteEditor() {
           </Button>
         </div>
       </div>
+
+      {showPermanentDeleteConfirm && (
+        <div className="editor__delete-warning" role="alert">
+          <p className="editor__delete-warning-text">
+            Delete this note permanently? This action cannot be undone.
+          </p>
+          <div className="editor__delete-warning-actions">
+            <Button
+              className="editor__delete-warning-btn editor__delete-warning-btn--cancel"
+              onClick={onCancelPermanentDelete}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="editor__delete-warning-btn editor__delete-warning-btn--danger"
+              onClick={onConfirmPermanentDelete}
+            >
+              Delete Forever
+            </Button>
+          </div>
+        </div>
+      )}
 
       <MetaBar
         tags={tags}

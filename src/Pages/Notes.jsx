@@ -1,9 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router";
+import { SearchX } from "lucide-react";
 import { useDataContext } from "../context/NoteProvider";
 import "./Dashboard.css";
 
-function Notes() {
+function Notes({ rightPane }) {
   const { notes } = useDataContext();
   const allNotes = notes.filter((note) => !note.isTrash);
 
@@ -11,14 +12,28 @@ function Notes() {
     <div className="dashboard__list">
       <div className="dashboard__list-panel">
         <div className="dashboard__list-header">
-          <h2 className="dashboard__list-title">All Notes</h2>
+          <h2 className="dashboard__list-title dashboard__folder-title">
+            All Notes
+          </h2>
           <span className="dashboard__list-count">{allNotes.length}</span>
         </div>
         <div className="dashboard__notes-scroll">
-          {allNotes.length !== 0 &&
-            allNotes.map((note) => <NoteItem key={note.id} note={note} />)}
+          {allNotes.length === 0 ? (
+            <div className="dashboard__no-results">
+              <SearchX size={36} className="dashboard__no-results-icon" />
+              <p>No notes available right now.</p>
+            </div>
+          ) : (
+            allNotes.map((note) => <NoteItem key={note.id} note={note} />)
+          )}
         </div>
       </div>
+      {rightPane ?? (
+        <div className="dashboard__select-prompt">
+          <h3>Select a note</h3>
+          <p>Choose a note from the list to view and edit its content.</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -37,7 +52,9 @@ function NoteItem({ note }) {
       <p className="dashboard__note-preview">{note.content || "No content"}</p>
 
       <div className="dashboard__note-meta">
-        <span className="dashboard__note-data">{note.date}</span>
+        <span className="dashboard__note-data dashboard__note-date">
+          {note.date}
+        </span>
         <div className="dashboard__note-tags">
           <span className="dashboard__note-tag" style={note.style}>
             {note.tag}
