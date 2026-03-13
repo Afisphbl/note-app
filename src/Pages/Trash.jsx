@@ -5,8 +5,19 @@ import { useDataContext } from "../context/NoteProvider";
 import "./Dashboard.css";
 
 function Trash({ rightPane }) {
-  const { notes, restoreNote } = useDataContext();
+  const { notes, restoreNote, searchTerm } = useDataContext();
   const trashNotes = notes.filter((note) => note.isTrash);
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+  const filteredTrashNotes = trashNotes.filter((note) => {
+    if (!normalizedSearch) {
+      return true;
+    }
+
+    return [note.title, note.content, note.tag, note.date]
+      .join(" ")
+      .toLowerCase()
+      .includes(normalizedSearch);
+  });
 
   return (
     <div className="dashboard__list">
@@ -15,16 +26,22 @@ function Trash({ rightPane }) {
           <h2 className="dashboard__list-title dashboard__folder-title">
             Trash
           </h2>
-          <span className="dashboard__list-count">{trashNotes.length}</span>
+          <span className="dashboard__list-count">
+            {filteredTrashNotes.length}
+          </span>
         </div>
         <div className="dashboard__notes-scroll">
-          {trashNotes.length === 0 ? (
+          {filteredTrashNotes.length === 0 ? (
             <div className="dashboard__no-results">
               <SearchX size={36} className="dashboard__no-results-icon" />
-              <p>Trash is empty.</p>
+              <p>
+                {normalizedSearch
+                  ? "No trashed notes match your search."
+                  : "Trash is empty."}
+              </p>
             </div>
           ) : (
-            trashNotes.map((note) => (
+            filteredTrashNotes.map((note) => (
               <TrashItem key={note.id} note={note} restoreNote={restoreNote} />
             ))
           )}

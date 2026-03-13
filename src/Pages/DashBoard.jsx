@@ -24,8 +24,13 @@ function DashBoard() {
   );
   const trashNotes = notes.filter((note) => note.isTrash);
   const from = location.state?.from ?? "/";
+  const fromEmpty = location.state?.fromEmpty === true;
 
   function renderEditorInSection() {
+    if (fromEmpty) {
+      return <NoteEditor />;
+    }
+
     if (from.includes("/favorites")) {
       return <Favorites rightPane={<NoteEditorPane />} />;
     }

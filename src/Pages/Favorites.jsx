@@ -5,8 +5,19 @@ import { useDataContext } from "../context/NoteProvider";
 import "./Dashboard.css";
 
 function Favorites({ rightPane }) {
-  const { notes } = useDataContext();
+  const { notes, searchTerm } = useDataContext();
   const favoriteNotes = notes.filter((note) => note.isFavorite);
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+  const filteredFavorites = favoriteNotes.filter((note) => {
+    if (!normalizedSearch) {
+      return true;
+    }
+
+    return [note.title, note.content, note.tag, note.date]
+      .join(" ")
+      .toLowerCase()
+      .includes(normalizedSearch);
+  });
 
   return (
     <div className="dashboard__list">
@@ -15,16 +26,22 @@ function Favorites({ rightPane }) {
           <h2 className="dashboard__list-title dashboard__folder-title">
             Favorite Notes
           </h2>
-          <span className="dashboard__list-count">{favoriteNotes.length}</span>
+          <span className="dashboard__list-count">
+            {filteredFavorites.length}
+          </span>
         </div>
         <div className="dashboard__notes-scroll">
-          {favoriteNotes.length === 0 ? (
+          {filteredFavorites.length === 0 ? (
             <div className="dashboard__no-results">
               <SearchX size={36} className="dashboard__no-results-icon" />
-              <p>No favorite notes yet.</p>
+              <p>
+                {normalizedSearch
+                  ? "No favorite notes match your search."
+                  : "No favorite notes yet."}
+              </p>
             </div>
           ) : (
-            favoriteNotes.map((note) => (
+            filteredFavorites.map((note) => (
               <FavoriteItem key={note.id} note={note} />
             ))
           )}

@@ -20,6 +20,7 @@ function getStoredNotes() {
 
 export const NoteProvider = ({ children }) => {
   const [notes, setNotes] = useState(getStoredNotes);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     localStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(notes));
@@ -113,6 +114,8 @@ export const NoteProvider = ({ children }) => {
 
   const value = {
     notes,
+    searchTerm,
+    setSearchTerm,
     addNote,
     deleteNote,
     restoreNote,

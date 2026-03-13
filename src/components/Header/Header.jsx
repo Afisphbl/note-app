@@ -7,6 +7,7 @@ import {
   BellRing,
 } from "lucide-react";
 import { useTheme } from "../../context/ThemeProvider";
+import { useDataContext } from "../../context/NoteProvider";
 import Button from "../Button/Button";
 import Input from "../Input/Input";
 
@@ -14,6 +15,7 @@ import "./Header.css";
 
 function Header() {
   const { theme, toggleTheme } = useTheme();
+  const { searchTerm, setSearchTerm } = useDataContext();
 
   return (
     <header className="header">
@@ -25,7 +27,12 @@ function Header() {
       <div className="header__actions">
         <div className="header__search">
           <SearchIcon size={16} className="header__search-icon" />
-          <Input type="search" placeholder="Search notes..." />
+          <Input
+            type="search"
+            placeholder="Search notes..."
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+          />
         </div>
 
         <Button className="header__icon-btn" onClick={toggleTheme}>

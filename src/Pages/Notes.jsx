@@ -5,8 +5,19 @@ import { useDataContext } from "../context/NoteProvider";
 import "./Dashboard.css";
 
 function Notes({ rightPane }) {
-  const { notes } = useDataContext();
+  const { notes, searchTerm } = useDataContext();
   const allNotes = notes.filter((note) => !note.isTrash);
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+  const filteredNotes = allNotes.filter((note) => {
+    if (!normalizedSearch) {
+      return true;
+    }
+
+    return [note.title, note.content, note.tag, note.date]
+      .join(" ")
+      .toLowerCase()
+      .includes(normalizedSearch);
+  });
 
   return (
     <div className="dashboard__list">
@@ -15,16 +26,20 @@ function Notes({ rightPane }) {
           <h2 className="dashboard__list-title dashboard__folder-title">
             All Notes
           </h2>
-          <span className="dashboard__list-count">{allNotes.length}</span>
+          <span className="dashboard__list-count">{filteredNotes.length}</span>
         </div>
         <div className="dashboard__notes-scroll">
-          {allNotes.length === 0 ? (
+          {filteredNotes.length === 0 ? (
             <div className="dashboard__no-results">
               <SearchX size={36} className="dashboard__no-results-icon" />
-              <p>No notes available right now.</p>
+              <p>
+                {normalizedSearch
+                  ? "No notes match your search."
+                  : "No notes available right now."}
+              </p>
             </div>
           ) : (
-            allNotes.map((note) => <NoteItem key={note.id} note={note} />)
+            filteredNotes.map((note) => <NoteItem key={note.id} note={note} />)
           )}
         </div>
       </div>
