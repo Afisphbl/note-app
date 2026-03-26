@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router";
 import {
   Notebook,
   SearchIcon,
@@ -19,10 +20,10 @@ function Header() {
 
   return (
     <header className="header">
-      <div className="header__brand">
+      <Link to="/" className="header__brand">
         <Notebook size={24} className="header__brand-icon " />
         <h1 className="header__brand-title">Notes App</h1>
-      </div>
+      </Link>
 
       <div className="header__actions">
         <div className="header__search">
