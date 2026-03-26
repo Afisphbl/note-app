@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Routes, Route, useLocation } from "react-router";
 import { useDataContext } from "../context/NoteProvider";
 import NoteEditor from "../components/Note/NoteEditor";
@@ -5,6 +6,7 @@ import EmptyNote from "../components/Empty/EmptyNote";
 import Notes from "./Notes";
 import Favorites from "./Favorites";
 import Trash from "./Trash";
+import Share from "./Share";
 import Settings from "../components/Settings/Settings";
 
 function NoteEditorPane() {
@@ -22,6 +24,7 @@ function DashBoard() {
   const favoriteNotes = notes.filter(
     (note) => note.isFavorite && !note.isTrash,
   );
+  const sharedNotes = notes.filter((note) => note.shared && !note.isTrash);
   const trashNotes = notes.filter((note) => note.isTrash);
   const from = location.state?.from ?? "/";
   const fromEmpty = location.state?.fromEmpty === true;
@@ -37,6 +40,10 @@ function DashBoard() {
 
     if (from.includes("/trash")) {
       return <Trash rightPane={<NoteEditorPane />} />;
+    }
+
+    if (from.includes("/shared")) {
+      return <Share rightPane={<NoteEditorPane />} />;
     }
 
     return <Notes rightPane={<NoteEditorPane />} />;
@@ -67,6 +74,20 @@ function DashBoard() {
         />
 
         <Route
+          path="shared"
+          element={
+            sharedNotes.length === 0 ? (
+              <EmptyNote
+                title="No shared notes yet"
+                subtitle="Shared notes will appear here when collaboration starts."
+              />
+            ) : (
+              <Share rightPane={null} />
+            )
+          }
+        />
+
+        <Route
           path="trash"
           element={
             trashNotes.length === 0 ? (
@@ -86,4 +107,4 @@ function DashBoard() {
   );
 }
 
-export default DashBoard;
+export default memo(DashBoard);

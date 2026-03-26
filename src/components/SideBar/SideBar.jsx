@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Link } from "react-router";
 import {
   PlusIcon,
@@ -8,7 +8,6 @@ import {
   Trash2Icon,
   Settings,
 } from "lucide-react";
-import Button from "../Button/Button";
 import "./Sidebar.css";
 
 function SideBar() {
@@ -66,4 +65,4 @@ function SideBar() {
   );
 }
 
-export default SideBar;
+export default memo(SideBar);

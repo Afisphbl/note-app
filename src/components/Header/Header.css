@@ -17,6 +17,7 @@
   align-items: center;
   gap: 1rem;
   color: var(--text-main);
+  cursor: pointer;
 }
 
 .header__brand-icon {

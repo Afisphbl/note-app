@@ -4,6 +4,14 @@
   overflow: hidden;
 }
 
+.dashboard__loading {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
 /* ---- Empty State ---- */
 .dashboard__empty {
   display: flex;

@@ -8,10 +8,8 @@ import App from "./App";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <ThemeProvider>
-      <NoteProvider>
-        <App />
-      </NoteProvider>
-    </ThemeProvider>
+    <NoteProvider>
+      <App />
+    </NoteProvider>
   </React.StrictMode>,
 );
